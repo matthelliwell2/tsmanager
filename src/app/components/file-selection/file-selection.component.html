@@ -1,0 +1,69 @@
+<mat-card class="file-selection-card">
+   <mat-card-header>
+      <mat-card-title>Select Files</mat-card-title>
+      <mat-card-subtitle>Choose a folder and specify which files to process</mat-card-subtitle>
+   </mat-card-header>
+
+   <mat-card-content>
+      <div class="form-section">
+         <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Folder</mat-label>
+            <input matInput [value]="selectedFolderName()" readonly placeholder="Select a folder" />
+            <button matSuffix mat-icon-button (click)="selectFolder()" type="button">
+               <mat-icon>folder_open</mat-icon>
+            </button>
+         </mat-form-field>
+
+         <mat-form-field appearance="outline" class="full-width">
+            <mat-label>File Pattern</mat-label>
+            <input matInput [value]="globPattern()" (input)="onGlobPatternChange($event)" placeholder="**/*.stl" />
+            <mat-hint>Use glob patterns like **/*.stl to match files in subfolders</mat-hint>
+         </mat-form-field>
+
+         <div>
+            <button mat-raised-button color="primary" (click)="scanFiles()" [disabled]="!canScan()" class="scan-button">
+               @if (isScanning()) {
+                  <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+               } @else {
+                  <mat-icon>search</mat-icon>
+               }
+               Scan Files
+            </button>
+            <!-- This div pushes the button up a bit so it align with the text boxes. -->
+            <div class="mat-mdc-form-field-bottom-align"></div>
+         </div>
+      </div>
+
+      @if (error()) {
+         <mat-card class="error-card">
+            <mat-card-content>
+               <div class="error-content">
+                  <mat-icon color="warn">error</mat-icon>
+                  <span>{{ error() }}</span>
+               </div>
+            </mat-card-content>
+         </mat-card>
+      }
+
+      @if (matchingFiles().length > 0) {
+         <div class="results-section">
+            <h3>Found {{ matchingFiles().length }} files</h3>
+            <mat-list class="file-list">
+               @for (file of matchingFiles(); track file.path) {
+                  <mat-list-item class="file-item" (click)="onFileClick(file)" [class.selected]="file.path === selectedFile()?.path">
+                     <mat-icon matListItemIcon>description</mat-icon>
+                     <div matListItemTitle>
+                        {{ file.name }}:
+                        @for (tag of file.metadata?.tags; track tag.title) {
+                           <span [style.background-color]="getTagColor(tag)" [style.color]="getTagTextColor(tag)" class="tag-icon">
+                              {{ tag.title }}
+                           </span>
+                        }
+                     </div>
+                  </mat-list-item>
+               }
+            </mat-list>
+         </div>
+      }
+   </mat-card-content>
+</mat-card>

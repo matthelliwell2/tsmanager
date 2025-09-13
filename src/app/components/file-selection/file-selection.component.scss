@@ -1,0 +1,84 @@
+.file-selection-card {
+  margin-bottom: 16px;
+}
+
+.file-item.selected {
+  background-color: #e3f2fd; // Light blue highlight
+  border-left: 4px solid #1976d2; // Accent border
+}
+
+.full-width {
+  width: 100%;
+}
+
+.scan-button {
+  align-self: flex-end;
+  min-width: 120px;
+  margin-bottom: 12px;
+}
+
+.button-spinner {
+  margin-right: 8px;
+}
+
+.error-card {
+  margin-bottom: 16px;
+  border-left: 4px solid #f44336;
+}
+
+.error-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #f44336;
+}
+
+.results-section {
+  margin-top: 24px;
+}
+
+.results-section h3 {
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.file-list {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.file-item {
+  margin-top:-15px;
+  margin-bottom:-5px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.file-item:last-child {
+  border-bottom: none;
+}
+
+.no-metadata {
+  color: #666;
+  font-style: italic;
+  font-size: 0.875em;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 768px) {
+  .form-section {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+
+  .scan-button {
+    align-self: flex-end;
+  }
+}

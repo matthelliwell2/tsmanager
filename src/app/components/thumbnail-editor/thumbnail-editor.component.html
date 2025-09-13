@@ -1,0 +1,46 @@
+<app-file-selection (fileSelected)="onFileSelected($event)"></app-file-selection>
+<mat-card class="thumbnail-management-card">
+   <mat-card-header>
+      <mat-card-title>Adjust Thumbnail</mat-card-title>
+      <mat-card-subtitle>Update thumbnail on selected file</mat-card-subtitle>
+   </mat-card-header>
+
+   <mat-card-content>
+      @if (isProcessing()) {
+         <div class="processing-container">
+            <mat-progress-spinner mode="indeterminate" diameter="40" color="primary"></mat-progress-spinner>
+            <div>processing</div>
+         </div>
+      } @else if (selectedFileContent().length > 0) {
+         <div class="container">
+            <stl-model-viewer
+               #stlviewer
+               class="box"
+               [stlModelFiles]="selectedFileContent()"
+               [hasControls]="true"
+               [centered]="true"
+               [renderer]="renderer"
+               [camera]="camera"
+               [controls]="controls()"
+            ></stl-model-viewer>
+            <button class="copy-button" mat-raised-button color="primary" (click)="copySTL()">Copy<mat-icon>chevron_right</mat-icon></button>
+            @if (thumbnailContent()) {
+               <div class="box"><img [src]="thumbnailContent()" alt="Loaded Image" /></div>
+            } @else {
+               <div class="box">No thumbnail available</div>
+            }
+         </div>
+      }
+      <!-- Error Display -->
+      @if (error()) {
+         <mat-card class="error-card">
+            <mat-card-content>
+               <div class="error-content">
+                  <mat-icon color="warn">error</mat-icon>
+                  <span>{{ error() }}</span>
+               </div>
+            </mat-card-content>
+         </mat-card>
+      }
+   </mat-card-content>
+</mat-card>

@@ -1,0 +1,27 @@
+@if (isVisible()) {
+   <mat-card class="progress-card">
+      <mat-card-content>
+         @if (error()) {
+            <div class="error-section">
+               <div class="error-header">
+                  <mat-icon color="warn">error</mat-icon>
+                  <h3>Operation Failed</h3>
+               </div>
+               <p class="error-message">{{ error() }}</p>
+            </div>
+         } @else {
+            <div class="progress-section">
+               <div class="progress-header">
+                  <mat-icon color="primary">sync</mat-icon>
+                  <h3>Processing Files</h3>
+               </div>
+               @if (status()) {
+                  <p class="status-message">{{ status() }}</p>
+               }
+               <mat-progress-bar mode="determinate" [value]="progress()" class="progress-bar"></mat-progress-bar>
+               <p class="progress-text">{{ progress() | number: '1.0-0' }}% complete</p>
+            </div>
+         }
+      </mat-card-content>
+   </mat-card>
+}

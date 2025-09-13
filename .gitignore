@@ -1,0 +1,32 @@
+# IntelliJ IDEA project files
+.idea/
+*.iml
+*.iws
+out/
+
+# Angular build output
+/dist/
+/build/
+/tmp/
+/.angular/
+/coverage/
+
+# Node.js dependencies and logs
+/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.*.local
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Compiled TypeScript
+*.tsbuildinfo
+
+# Optional: VS Code settings if you switch editors
+.vscode/

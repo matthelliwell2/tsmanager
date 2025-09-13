@@ -1,0 +1,93 @@
+/* You can add global styles to this file, and also import other style files */
+
+// Global styles
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #fafafa;
+}
+
+// Custom scrollbar styles
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+// Material Design card elevation
+.mat-mdc-card {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+// Custom button styles
+.mat-mdc-raised-button {
+  border-radius: 4px;
+}
+
+// Form field styles
+.mat-mdc-form-field {
+  .mat-mdc-text-field-wrapper {
+    border-radius: 4px;
+  }
+}
+
+// List styles
+.mat-mdc-list-item {
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+.mat-mdc-list-item:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+// Progress bar styles
+.mat-mdc-progress-bar {
+  border-radius: 4px;
+}
+
+// Error and success message styles
+.error-message {
+  color: #f44336;
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+.success-message {
+  color: #4caf50;
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+// Responsive utilities
+@media (max-width: 768px) {
+  .mat-mdc-card {
+    margin: 8px;
+  }
+  
+  .mat-mdc-toolbar {
+    padding: 0 16px;
+  }
+}
