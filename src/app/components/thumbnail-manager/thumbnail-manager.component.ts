@@ -1,4 +1,4 @@
-import { Component, signal, ViewChild, WritableSignal } from '@angular/core'
+import { Component, effect, signal, ViewChild, WritableSignal } from '@angular/core'
 import { FileSelectionComponent } from '../file-selection/file-selection.component'
 import { MatProgressSpinner } from '@angular/material/progress-spinner'
 import { StlModelViewerComponent } from 'angular-stl-model-viewer'
@@ -25,8 +25,16 @@ export class ThumbnailManagerComponent {
 
    @ViewChild('stlviewer', { static: false }) stlViewerComponent!: StlModelViewerComponent
 
-   constructor(private thumbnailService: ThumbnailService) {}
+   constructor(private thumbnailService: ThumbnailService) {
+      effect(() => {
+         const file = this.selectedFile()
+         if (file) {
+            void this.onFileSelected(file)
+         }
+      })
+   }
 
+   matchingFiles = signal<FileInfo[]>([])
    isProcessing = signal(false)
    selectedFileContent = signal<string[]>([])
    thumbnailContent = signal<string | undefined>(undefined)

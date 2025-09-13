@@ -21,10 +21,6 @@ export class TagManagerComponent {
 
    currentOperationString = computed(() => (this.currentOperation() ? `Processing ${this.currentOperation()}` : ''))
 
-   onMatchingFiles(files: FileInfo[]): void {
-      this.matchingFiles.set(files)
-   }
-
    onChangesStarted(): void {
       this.isProcessing.set(true)
    }

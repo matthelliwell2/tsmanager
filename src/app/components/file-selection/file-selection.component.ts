@@ -1,4 +1,4 @@
-import { Component, signal, computed, output } from '@angular/core'
+import { Component, signal, computed, output, model, effect } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { MatCardModule } from '@angular/material/card'
@@ -18,14 +18,12 @@ import { FileInfo, Tag } from '../../models'
    styleUrls: ['./file-selection.component.scss'],
 })
 export class FileSelectionComponent {
-   matchingFileEmitter = output<FileInfo[]>()
-   fileSelected = output<FileInfo>()
+   matchingFiles = model.required<FileInfo[]>()
+   selectedFile = model<FileInfo>()
 
    selectedDirHandle = signal<FileSystemDirectoryHandle | undefined>(undefined)
    selectedFolderName = computed(() => this.selectedDirHandle()?.name ?? '')
    globPattern = signal<string>('**/*.stl')
-   matchingFiles = signal<FileInfo[]>([])
-   selectedFile = signal<FileInfo | undefined>(undefined)
    isScanning = signal<boolean>(false)
    error = signal<string | undefined>(undefined)
 
@@ -34,7 +32,13 @@ export class FileSelectionComponent {
    constructor(
       private fileService: FileService,
       private tagService: TagService,
-   ) {}
+   ) {
+      // Whenever the list of matches files changes, clear the selected file
+      effect(() => {
+         this.matchingFiles()
+         this.selectedFile.set(undefined)
+      })
+   }
 
    async selectFolder(): Promise<void> {
       try {
@@ -45,7 +49,6 @@ export class FileSelectionComponent {
          this.error.set(`Failed to select folder: ${error}`)
       } finally {
          this.matchingFiles.set([])
-         this.matchingFileEmitter.emit([])
       }
    }
 
@@ -74,7 +77,6 @@ export class FileSelectionComponent {
          const files = await this.fileService.scanFiles(dirHandler, this.globPattern())
 
          this.matchingFiles.set(files)
-         this.matchingFileEmitter.emit(files)
       } catch (error) {
          this.error.set(`Failed to scan files: ${error}`)
          this.matchingFiles.set([])
@@ -88,12 +90,7 @@ export class FileSelectionComponent {
       this.globPattern.set(target.value)
    }
 
-   tagList(tags?: Tag[]): string {
-      return tags ? tags.map(t => t.title).join(', ') : '<no tags>'
-   }
-
    onFileClick(file: FileInfo) {
       this.selectedFile.set(file)
-      this.fileSelected.emit(file)
    }
 }

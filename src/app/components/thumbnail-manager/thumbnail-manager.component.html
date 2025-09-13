@@ -1,4 +1,4 @@
-<app-file-selection (fileSelected)="onFileSelected($event)"></app-file-selection>
+<app-file-selection [(selectedFile)]="selectedFile" [(matchingFiles)]="matchingFiles"></app-file-selection>
 <mat-card class="thumbnail-management-card">
    <mat-card-header>
       <mat-card-title>Adjust Thumbnail</mat-card-title>
