@@ -1,8 +1,8 @@
 <app-file-selection (matchingFileEmitter)="onMatchingFiles($event)"></app-file-selection>
-<app-tag-management
+<app-tag-updater
    [matchingFiles]="matchingFiles()"
    (changesApplied)="onChangesApplied($event)"
    (changesStarted)="onChangesStarted()"
    (progress)="onProgressChange($event)"
-></app-tag-management>
+></app-tag-updater>
 <app-progress [isVisible]="isProcessing()" [progress]="progress()" [status]="currentOperationString()"></app-progress>

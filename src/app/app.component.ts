@@ -6,12 +6,12 @@ import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatListModule } from '@angular/material/list'
 import { MatTabsModule } from '@angular/material/tabs'
 import { MatButtonModule } from '@angular/material/button'
-import { TagEditorComponent } from './components/tag-editor/tag-editor.component'
-import { ThumbnailEditorComponent } from './components/thumbnail-editor/thumbnail-editor.component'
+import { TagManagerComponent } from './components/tag-manager/tag-manager.component'
+import { ThumbnailManagerComponent } from './components/thumbnail-manager/thumbnail-manager.component'
 
 @Component({
    selector: 'app-root',
-   imports: [CommonModule, MatToolbarModule, MatTabsModule, MatIconModule, MatSidenavModule, MatListModule, MatButtonModule, TagEditorComponent, ThumbnailEditorComponent],
+   imports: [CommonModule, MatToolbarModule, MatTabsModule, MatIconModule, MatSidenavModule, MatListModule, MatButtonModule, TagManagerComponent, ThumbnailManagerComponent],
    templateUrl: './app.component.html',
    styleUrls: ['./app.component.scss'],
 })

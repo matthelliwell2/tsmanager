@@ -11,12 +11,12 @@ import { PerspectiveCamera, WebGLRenderer } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 @Component({
-   selector: 'app-thumbnail-editor',
+   selector: 'app-thumbnail-manager',
    imports: [FileSelectionComponent, MatProgressSpinner, StlModelViewerComponent, MatButton, MatCardModule, MatCardContent, MatCardHeader, MatCardSubtitle, MatIconModule],
-   templateUrl: './thumbnail-editor.component.html',
-   styleUrl: './thumbnail-editor.component.scss',
+   templateUrl: './thumbnail-manager.component.html',
+   styleUrl: './thumbnail-manager.component.scss',
 })
-export class ThumbnailEditorComponent {
+export class ThumbnailManagerComponent {
    // Use a custom renderer otherwise image capture doesn't work
    readonly renderer = new WebGLRenderer({ antialias: true, preserveDrawingBuffer: true })
    readonly camera = new PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 15)

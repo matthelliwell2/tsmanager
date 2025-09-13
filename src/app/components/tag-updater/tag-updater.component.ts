@@ -15,7 +15,7 @@ import { TagService, FileService } from '../../services'
 import { FileInfo, Tag, ChangePreview } from '../../models'
 
 @Component({
-   selector: 'app-tag-management',
+   selector: 'app-tag-updater',
    imports: [
       CommonModule,
       FormsModule,
@@ -30,10 +30,10 @@ import { FileInfo, Tag, ChangePreview } from '../../models'
       MatCheckboxModule,
       MatProgressSpinnerModule,
    ],
-   templateUrl: './tag-management.component.html',
-   styleUrls: ['./tag-management.component.scss'],
+   templateUrl: './tag-updater.component.html',
+   styleUrls: ['./tag-updater.component.scss'],
 })
-export class TagManagementComponent {
+export class TagUpdaterComponent {
    constructor(
       private tagService: TagService,
       private fileService: FileService,

@@ -1,17 +1,17 @@
 import { Component, computed, signal } from '@angular/core'
 import { FileSelectionComponent } from '../file-selection/file-selection.component'
 import { ProgressComponent } from '../progress/progress.component'
-import { TagManagementComponent } from '../tag-management/tag-management.component'
+import { TagUpdaterComponent } from '../tag-updater/tag-updater.component'
 import { FileInfo, OperationType } from '../../models'
 import { MatSnackBar } from '@angular/material/snack-bar'
 
 @Component({
-   selector: 'app-tag-editor',
-   imports: [FileSelectionComponent, ProgressComponent, TagManagementComponent],
-   templateUrl: './tag-editor.component.html',
-   styleUrl: './tag-editor.component.scss',
+   selector: 'app-tag-manager',
+   imports: [FileSelectionComponent, ProgressComponent, TagUpdaterComponent],
+   templateUrl: './tag-manager.component.html',
+   styleUrl: './tag-manager.component.scss',
 })
-export class TagEditorComponent {
+export class TagManagerComponent {
    constructor(private snackBar: MatSnackBar) {}
 
    matchingFiles = signal<FileInfo[]>([])
