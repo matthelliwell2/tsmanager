@@ -20,6 +20,7 @@ export class TagManagerComponent {
    progress = signal(0)
 
    currentOperationString = computed(() => (this.currentOperation() ? `Processing ${this.currentOperation()}` : ''))
+   isFileSelectionBusy = signal(false)
 
    onChangesStarted(): void {
       this.isProcessing.set(true)

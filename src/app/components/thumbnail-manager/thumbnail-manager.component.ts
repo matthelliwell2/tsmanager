@@ -21,7 +21,7 @@ export class ThumbnailManagerComponent {
    readonly renderer = new WebGLRenderer({ antialias: true, preserveDrawingBuffer: true })
    readonly camera = new PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 15)
    readonly controls: WritableSignal<OrbitControls | undefined> = signal(undefined)
-   // readonly controls = signal(new OrbitControls(this.camera, this.renderer.domElement))
+   readonly isFileSelectionBusy = signal(false)
 
    @ViewChild('stlviewer', { static: false }) stlViewerComponent!: StlModelViewerComponent
 

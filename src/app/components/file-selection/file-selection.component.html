@@ -21,8 +21,8 @@
          </mat-form-field>
 
          <div>
-            <button mat-raised-button color="primary" (click)="scanFiles()" [disabled]="!canScan()" class="scan-button">
-               @if (isScanning()) {
+            <button mat-raised-button color="primary" (click)="scanFiles()" [disabled]="isBusy() || this.selectedDirHandle() === undefined" class="scan-button">
+               @if (isBusy()) {
                   <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
                } @else {
                   <mat-icon>search</mat-icon>

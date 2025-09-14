@@ -1,4 +1,4 @@
-import { Component, signal, computed, output, model, effect } from '@angular/core'
+import { Component, signal, computed, model, effect } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { MatCardModule } from '@angular/material/card'
@@ -20,14 +20,12 @@ import { FileInfo, Tag } from '../../models'
 export class FileSelectionComponent {
    matchingFiles = model.required<FileInfo[]>()
    selectedFile = model<FileInfo>()
+   isBusy = model.required<boolean>()
 
    selectedDirHandle = signal<FileSystemDirectoryHandle | undefined>(undefined)
    selectedFolderName = computed(() => this.selectedDirHandle()?.name ?? '')
    globPattern = signal<string>('**/*.stl')
-   isScanning = signal<boolean>(false)
    error = signal<string | undefined>(undefined)
-
-   canScan = computed(() => this.selectedDirHandle() !== undefined && !this.isScanning())
 
    constructor(
       private fileService: FileService,
@@ -61,7 +59,7 @@ export class FileSelectionComponent {
    }
 
    async scanFiles(): Promise<void> {
-      if (!this.canScan()) {
+      if (this.isBusy()) {
          return
       }
 
@@ -71,7 +69,7 @@ export class FileSelectionComponent {
       }
 
       try {
-         this.isScanning.set(true)
+         this.isBusy.set(true)
          this.error.set(undefined)
 
          const files = await this.fileService.scanFiles(dirHandler, this.globPattern())
@@ -81,7 +79,7 @@ export class FileSelectionComponent {
          this.error.set(`Failed to scan files: ${error}`)
          this.matchingFiles.set([])
       } finally {
-         this.isScanning.set(false)
+         this.isBusy.set(false)
       }
    }
 

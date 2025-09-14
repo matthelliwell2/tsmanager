@@ -1,4 +1,4 @@
-<app-file-selection [(matchingFiles)]="matchingFiles"></app-file-selection>
+<app-file-selection [(matchingFiles)]="matchingFiles" [(isBusy)]="isFileSelectionBusy"></app-file-selection>
 <app-tag-updater
    [matchingFiles]="matchingFiles()"
    (changesApplied)="onChangesApplied($event)"
