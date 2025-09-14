@@ -36,10 +36,10 @@ export class ThumbnailManagerComponent {
       })
    }
 
-   isProcessing = signal(false)
-   selectedFileContent = signal<string[]>([])
-   thumbnailContent = signal<string | undefined>(undefined)
-   error = signal<string | undefined>(undefined)
+   readonly isProcessing = signal(false)
+   readonly selectedFileContent = signal<string[]>([])
+   readonly thumbnailContent = signal<string | undefined>(undefined)
+   readonly error = signal<string | undefined>(undefined)
 
    async onFileSelected(fileInfo: FileInfo): Promise<void> {
       this.isProcessing.set(true)

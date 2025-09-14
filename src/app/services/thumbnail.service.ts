@@ -78,4 +78,9 @@ export class ThumbnailService {
       // Finalize write
       await writable.close()
    }
+
+   async hasThumbnail(fileInfo: FileInfo): Promise<boolean> {
+      const handle = await this.getThumbnailHandle(fileInfo, false)
+      return handle !== undefined
+   }
 }

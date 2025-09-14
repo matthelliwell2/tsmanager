@@ -8,8 +8,9 @@ import { MatTabsModule } from '@angular/material/tabs'
 import { MatButtonModule } from '@angular/material/button'
 import { TagManagerComponent } from './components/tag-manager/tag-manager.component'
 import { ThumbnailManagerComponent } from './components/thumbnail-manager/thumbnail-manager.component'
-import { FileSelectionComponent, TagUpdaterComponent } from './components'
+import { FileSelectionComponent } from './components'
 import { FileInfo } from './models'
+import { BulkThumbnailManagerComponent } from './components/bulk-thumbnail-manager/bulk-thumbnail-manager.component'
 
 @Component({
    selector: 'app-root',
@@ -24,6 +25,7 @@ import { FileInfo } from './models'
       TagManagerComponent,
       ThumbnailManagerComponent,
       FileSelectionComponent,
+      BulkThumbnailManagerComponent,
    ],
    templateUrl: './app.component.html',
    styleUrls: ['./app.component.scss'],

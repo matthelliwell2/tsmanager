@@ -1,7 +1,5 @@
 import { Component, computed, Signal, signal } from '@angular/core'
-import { FileSelectionComponent } from '../file-selection/file-selection.component'
 import { ProgressComponent } from '../progress/progress.component'
-import { TagUpdaterComponent } from '../tag-updater/tag-updater.component'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { FileSelectionService } from '../../services/file-selection.service'
 import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/material/autocomplete'

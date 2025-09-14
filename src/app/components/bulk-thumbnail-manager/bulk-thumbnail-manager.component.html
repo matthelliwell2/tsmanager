@@ -1,0 +1,52 @@
+<mat-card class="thumbnail-management-card">
+   <mat-card-header>
+      <mat-card-title>Manage Thumbnails</mat-card-title>
+      <mat-card-subtitle>Create or update thumbnails for all scanned files</mat-card-subtitle>
+   </mat-card-header>
+
+   <mat-card-content>
+      @if (fileSelectionService.matchingFiles().length === 0) {
+         <div class="no-files-message">
+            <mat-icon>info</mat-icon>
+            <p>Please select files first to manage their thumbnails.</p>
+         </div>
+      } @else {
+         <!-- Add Tags Section -->
+         <div class="update-thumbnail-section">
+            <button mat-raised-button color="primary" (click)="onGenerateThumbnails()" [disabled]="!canUpdateThumbnails()" class="update-thumbnails-button">
+               Generate Thumbnails
+            </button>
+            <mat-checkbox [checked]="overwriteExistingThumbnails()" (input)="overwriteExistingThumbnails.set($any($event.target).value)" class="tag-checkbox"></mat-checkbox>
+            <span>Overwrite existing thumbnails</span>
+            <mat-checkbox [checked]="rotate()" (input)="rotate.set($any($event.target).value)" class="tag-checkbox"></mat-checkbox>
+            <span>Rotate Image</span>
+            <mat-hint>Convert z-up to y-up</mat-hint>
+         </div>
+
+         <!-- Error Display -->
+         @if (error()) {
+            <mat-card class="error-card">
+               <mat-card-content>
+                  <div class="error-content">
+                     <mat-icon color="warn">error</mat-icon>
+                     <span>{{ error() }}</span>
+                  </div>
+               </mat-card-content>
+            </mat-card>
+         }
+      }
+   </mat-card-content>
+</mat-card>
+
+<app-progress [isVisible]="isProcessing()" [progress]="progress()"></app-progress>
+<div style="width: 300px; height: 300px">
+   <stl-model-viewer
+      #stlviewer
+      class="box"
+      [stlModelFiles]="selectedFileContent()"
+      [hasControls]="true"
+      [centered]="true"
+      [renderer]="renderer"
+      [camera]="camera"
+   ></stl-model-viewer>
+</div>
