@@ -10,6 +10,7 @@ import { MatListModule } from '@angular/material/list'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { FileService, TagService } from '../../services'
 import { FileInfo, Tag } from '../../models'
+import { FileSelectionService } from '../../services/file-selection.service'
 
 @Component({
    selector: 'app-file-selection',
@@ -18,27 +19,20 @@ import { FileInfo, Tag } from '../../models'
    styleUrls: ['./file-selection.component.scss'],
 })
 export class FileSelectionComponent {
-   matchingFiles = model.required<FileInfo[]>()
-   selectedFile = model<FileInfo>()
-   isBusy = model.required<boolean>()
-
    selectedDirHandle = signal<FileSystemDirectoryHandle | undefined>(undefined)
    selectedFolderName = computed(() => this.selectedDirHandle()?.name ?? '')
    globPattern = signal<string>('**/*.stl')
    error = signal<string | undefined>(undefined)
 
-   constructor(
-      private fileService: FileService,
-      private tagService: TagService,
-   ) {
-      // Whenever the list of matches files changes, clear the selected file
-      effect(() => {
-         this.matchingFiles()
-         this.selectedFile.set(undefined)
-      })
-   }
+   canScan = computed(() => !this.fileSelectionService.isBusy() && this.selectedDirHandle() !== undefined && this.globPattern().length > 0)
 
-   async selectFolder(): Promise<void> {
+   constructor(
+      private readonly fileService: FileService,
+      private readonly tagService: TagService,
+      protected readonly fileSelectionService: FileSelectionService,
+   ) {}
+
+   async onSelectFolder(): Promise<void> {
       try {
          this.error.set(undefined)
          const folder = await this.fileService.selectFolder()
@@ -46,7 +40,7 @@ export class FileSelectionComponent {
       } catch (error) {
          this.error.set(`Failed to select folder: ${error}`)
       } finally {
-         this.matchingFiles.set([])
+         this.fileSelectionService.matchingFiles.set([])
       }
    }
 
@@ -59,7 +53,7 @@ export class FileSelectionComponent {
    }
 
    async scanFiles(): Promise<void> {
-      if (this.isBusy()) {
+      if (this.fileSelectionService.isBusy()) {
          return
       }
 
@@ -69,26 +63,21 @@ export class FileSelectionComponent {
       }
 
       try {
-         this.isBusy.set(true)
+         this.fileSelectionService.isBusy.set(true)
          this.error.set(undefined)
 
          const files = await this.fileService.scanFiles(dirHandler, this.globPattern())
 
-         this.matchingFiles.set(files)
+         this.fileSelectionService.matchingFiles.set(files)
       } catch (error) {
          this.error.set(`Failed to scan files: ${error}`)
-         this.matchingFiles.set([])
+         this.fileSelectionService.matchingFiles.set([])
       } finally {
-         this.isBusy.set(false)
+         this.fileSelectionService.isBusy.set(false)
       }
    }
 
-   onGlobPatternChange(event: Event): void {
-      const target = event.target as HTMLInputElement
-      this.globPattern.set(target.value)
-   }
-
    onFileClick(file: FileInfo) {
-      this.selectedFile.set(file)
+      this.fileSelectionService.selectedFile.set(file)
    }
 }

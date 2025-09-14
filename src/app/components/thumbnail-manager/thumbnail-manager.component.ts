@@ -1,5 +1,4 @@
 import { Component, effect, signal, ViewChild, WritableSignal } from '@angular/core'
-import { FileSelectionComponent } from '../file-selection/file-selection.component'
 import { MatProgressSpinner } from '@angular/material/progress-spinner'
 import { StlModelViewerComponent } from 'angular-stl-model-viewer'
 import { FileInfo } from '../../models'
@@ -9,10 +8,11 @@ import { MatCardModule, MatCardContent, MatCardHeader, MatCardSubtitle } from '@
 import { MatIconModule } from '@angular/material/icon'
 import { PerspectiveCamera, WebGLRenderer } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { FileSelectionService } from '../../services/file-selection.service'
 
 @Component({
    selector: 'app-thumbnail-manager',
-   imports: [FileSelectionComponent, MatProgressSpinner, StlModelViewerComponent, MatButton, MatCardModule, MatCardContent, MatCardHeader, MatCardSubtitle, MatIconModule],
+   imports: [MatProgressSpinner, StlModelViewerComponent, MatButton, MatCardModule, MatCardContent, MatCardHeader, MatCardSubtitle, MatIconModule],
    templateUrl: './thumbnail-manager.component.html',
    styleUrl: './thumbnail-manager.component.scss',
 })
@@ -21,29 +21,29 @@ export class ThumbnailManagerComponent {
    readonly renderer = new WebGLRenderer({ antialias: true, preserveDrawingBuffer: true })
    readonly camera = new PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 15)
    readonly controls: WritableSignal<OrbitControls | undefined> = signal(undefined)
-   readonly isFileSelectionBusy = signal(false)
 
    @ViewChild('stlviewer', { static: false }) stlViewerComponent!: StlModelViewerComponent
 
-   constructor(private thumbnailService: ThumbnailService) {
+   constructor(
+      private thumbnailService: ThumbnailService,
+      private readonly fileSelectionService: FileSelectionService,
+   ) {
       effect(() => {
-         const file = this.selectedFile()
+         const file = this.fileSelectionService.selectedFile()
          if (file) {
             void this.onFileSelected(file)
          }
       })
    }
 
-   matchingFiles = signal<FileInfo[]>([])
    isProcessing = signal(false)
    selectedFileContent = signal<string[]>([])
    thumbnailContent = signal<string | undefined>(undefined)
    error = signal<string | undefined>(undefined)
-   selectedFile = signal<FileInfo | undefined>(undefined)
 
    async onFileSelected(fileInfo: FileInfo): Promise<void> {
       this.isProcessing.set(true)
-      this.selectedFile.set(fileInfo)
+      this.fileSelectionService.selectedFile.set(fileInfo)
       const content = await this.thumbnailService.loadSTL(fileInfo)
       setTimeout(() => {
          this.selectedFileContent.set([content])
@@ -73,9 +73,9 @@ export class ThumbnailManagerComponent {
    // Takes a snapshot of the image as currently rendered and saves it has a thumbnail
    async copySTL(): Promise<void> {
       const renderer = this.stlViewerComponent.renderer
-      if (renderer && this.selectedFile() !== undefined) {
+      if (renderer && this.fileSelectionService.selectedFile() !== undefined) {
          const dataURL = renderer.domElement.toDataURL('image/jpg')
-         await this.thumbnailService.saveThumbnail(this.selectedFile()!, dataURL)
+         await this.thumbnailService.saveThumbnail(this.fileSelectionService.selectedFile()!, dataURL)
       }
    }
 }

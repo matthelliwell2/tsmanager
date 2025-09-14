@@ -9,20 +9,20 @@
          <mat-form-field appearance="outline" class="full-width">
             <mat-label>Folder</mat-label>
             <input matInput [value]="selectedFolderName()" readonly placeholder="Select a folder" />
-            <button matSuffix mat-icon-button (click)="selectFolder()" type="button">
+            <button matSuffix mat-icon-button (click)="onSelectFolder()" type="button">
                <mat-icon>folder_open</mat-icon>
             </button>
          </mat-form-field>
 
          <mat-form-field appearance="outline" class="full-width">
             <mat-label>File Pattern</mat-label>
-            <input matInput [value]="globPattern()" (input)="onGlobPatternChange($event)" placeholder="**/*.stl" />
+            <input matInput [value]="globPattern()" (input)="globPattern.set($any($event.target).value)" />
             <mat-hint>Use glob patterns like **/*.stl to match files in subfolders</mat-hint>
          </mat-form-field>
 
          <div>
-            <button mat-raised-button color="primary" (click)="scanFiles()" [disabled]="isBusy() || this.selectedDirHandle() === undefined" class="scan-button">
-               @if (isBusy()) {
+            <button mat-raised-button color="primary" (click)="scanFiles()" [disabled]="!canScan()" class="scan-button">
+               @if (fileSelectionService.isBusy()) {
                   <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
                } @else {
                   <mat-icon>search</mat-icon>
@@ -45,12 +45,12 @@
          </mat-card>
       }
 
-      @if (matchingFiles().length > 0) {
+      @if (fileSelectionService.matchingFiles().length > 0) {
          <div class="results-section">
-            <h3>Found {{ matchingFiles().length }} files</h3>
+            <h3>Found {{ fileSelectionService.matchingFiles().length }} files</h3>
             <mat-list class="file-list">
-               @for (file of matchingFiles(); track file.path) {
-                  <mat-list-item class="file-item" (click)="onFileClick(file)" [class.selected]="file.path === selectedFile()?.path">
+               @for (file of fileSelectionService.matchingFiles(); track file.path) {
+                  <mat-list-item class="file-item" (click)="onFileClick(file)" [class.selected]="file.path === fileSelectionService.selectedFile()?.path">
                      <mat-icon matListItemIcon>description</mat-icon>
                      <div matListItemTitle>
                         {{ file.name }}:

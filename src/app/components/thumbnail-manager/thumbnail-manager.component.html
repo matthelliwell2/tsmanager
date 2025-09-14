@@ -1,4 +1,3 @@
-<app-file-selection [(selectedFile)]="selectedFile" [(matchingFiles)]="matchingFiles" [(isBusy)]="isFileSelectionBusy"></app-file-selection>
 <mat-card class="thumbnail-management-card">
    <mat-card-header>
       <mat-card-title>Adjust Thumbnail</mat-card-title>
@@ -30,7 +29,13 @@
                <div class="box">No thumbnail available</div>
             }
          </div>
+      } @else {
+         <div class="no-files-message">
+            <mat-icon>info</mat-icon>
+            <p>Please select file first to manage its thumbnail.</p>
+         </div>
       }
+
       <!-- Error Display -->
       @if (error()) {
          <mat-card class="error-card">

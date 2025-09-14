@@ -1,8 +1,121 @@
-<app-file-selection [(matchingFiles)]="matchingFiles" [(isBusy)]="isFileSelectionBusy"></app-file-selection>
-<app-tag-updater
-   [matchingFiles]="matchingFiles()"
-   (changesApplied)="onChangesApplied($event)"
-   (changesStarted)="onChangesStarted()"
-   (progress)="onProgressChange($event)"
-></app-tag-updater>
-<app-progress [isVisible]="isProcessing()" [progress]="progress()" [status]="currentOperationString()"></app-progress>
+<mat-card class="tag-management-card">
+   <mat-card-header>
+      <mat-card-title>Manage Tags</mat-card-title>
+      <mat-card-subtitle>Add or remove tags from selected files</mat-card-subtitle>
+   </mat-card-header>
+
+   <mat-card-content>
+      @if (fileSelectionService.matchingFiles().length === 0) {
+         <div class="no-files-message">
+            <mat-icon>info</mat-icon>
+            <p>Please select files first to manage their tags.</p>
+         </div>
+      } @else {
+         <!-- Add Tags Section -->
+         <div class="add-tags-section">
+            <h3>Add Tags</h3>
+            <div class="add-tag-form">
+               <mat-form-field appearance="outline" class="tag-input">
+                  <mat-label>New Tag</mat-label>
+                  <input matInput [value]="newTag()" (input)="newTag.set($any($event.target).value)" [matAutocomplete]="tagAutocomplete" placeholder="Enter tag name" />
+                  <mat-autocomplete #tagAutocomplete="matAutocomplete">
+                     @for (suggestion of tagSuggestions(); track suggestion) {
+                        <mat-option [value]="suggestion">{{ suggestion }}</mat-option>
+                     }
+                  </mat-autocomplete>
+                  <mat-hint>Enter a tag name and press 'Add Tag'</mat-hint>
+               </mat-form-field>
+
+               <div>
+                  <button mat-raised-button color="primary" (click)="addTag()" [disabled]="!canAddTag()" class="add-tag-button">
+                     <mat-icon>add</mat-icon>
+                     Add Tag
+                  </button>
+                  <!-- This div pushes the button up a bit so it aligns better. -->
+                  <div class="mat-mdc-form-field-bottom-align"></div>
+               </div>
+            </div>
+         </div>
+
+         <!-- Remove Tags Section -->
+         @if (existingTags().length > 0) {
+            <div class="remove-tags-section">
+               <h3>Remove Tags</h3>
+               <mat-list class="tag-list">
+                  @for (tag of existingTags(); track tag.title) {
+                     <mat-list-item class="tag-item">
+                        <div matListItemTitle>
+                           <mat-checkbox [checked]="isTagSelectedForRemoval(tag.title)" (change)="removeTag(tag.title)" class="tag-checkbox"></mat-checkbox>
+                           <span [style.background-color]="getTagColor(tag)" [style.color]="getTagTextColor(tag)" class="tag-icon">{{ tag.title }}</span> Used in
+                           {{ getTagUsageCount(tag.title) }} file{{ getTagUsageCount(tag.title) !== 1 ? 's' : '' }}
+                        </div>
+                     </mat-list-item>
+                  }
+               </mat-list>
+               <mat-hint>Select tags to remove</mat-hint>
+            </div>
+         }
+
+         <!-- Action Buttons -->
+         <div class="action-buttons">
+            <button mat-raised-button color="accent" (click)="applyChanges()" [disabled]="!canApply()" class="apply-button">
+               @if (isProcessing()) {
+                  <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+               } @else {
+                  <mat-icon>save</mat-icon>
+               }
+               Apply Changes
+            </button>
+         </div>
+
+         <!-- Preview Section -->
+         @if (changePreview()) {
+            <div class="preview-section">
+               <h2>Summary</h2>
+               <mat-card class="preview-card">
+                  <mat-card-content>
+                     <div class="preview-stats">
+                        <div class="stat-item">
+                           <mat-icon>description</mat-icon>
+                           <span>{{ changePreview()!.numFilesToUpdate }} files to update</span>
+                        </div>
+                        @if (changePreview()!.tagsToAdd.length > 0) {
+                           <div class="stat-item">
+                              <mat-icon>add</mat-icon>
+                              <span>
+                                 {{ changePreview()!.tagsToAdd.length }} tag{{ changePreview()!.tagsToAdd.length !== 1 ? 's' : '' }} to add:
+                                 {{ changePreview()!.tagsToAdd.join(', ') }}
+                              </span>
+                           </div>
+                        }
+                        @if (changePreview()!.tagsToRemove.length > 0) {
+                           <div class="stat-item">
+                              <mat-icon>remove</mat-icon>
+                              <span>
+                                 {{ changePreview()!.tagsToRemove.length }} tag{{ changePreview()!.tagsToRemove.length !== 1 ? 's' : '' }} to remove:
+                                 {{ changePreview()!.tagsToRemove.join(', ') }}
+                              </span>
+                           </div>
+                        }
+                     </div>
+                  </mat-card-content>
+               </mat-card>
+            </div>
+         }
+
+         <!-- Error Display -->
+         @if (error()) {
+            <mat-card class="error-card">
+               <mat-card-content>
+                  <div class="error-content">
+                     <mat-icon color="warn">error</mat-icon>
+                     <span>{{ error() }}</span>
+                  </div>
+               </mat-card-content>
+            </mat-card>
+         }
+      }
+   </mat-card-content>
+</mat-card>
+
+<app-progress [isVisible]="isProcessing()" [progress]="progress()"></app-progress>

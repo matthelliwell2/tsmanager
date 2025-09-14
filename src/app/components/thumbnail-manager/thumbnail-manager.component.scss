@@ -58,7 +58,6 @@ mat-card-content {
   }
 }
 
-
 .copy-button {
   flex: 0 0 auto;
   display: flex;
@@ -68,4 +67,13 @@ mat-card-content {
   height: auto; // Let it size naturally
   align-self: center; // Override container's stretch
   padding: 8px 12px;
+}
+
+.no-files-message {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  text-align: center;
+  color: #666;
 }

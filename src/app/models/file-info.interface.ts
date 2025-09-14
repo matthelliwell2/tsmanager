@@ -34,5 +34,3 @@ export interface ChangePreview {
    tagsToRemove: string[]
    affectedFiles: FileInfo[]
 }
-
-export type OperationType = 'scan' | 'add-tags' | 'remove-tags' | 'apply-changes'
