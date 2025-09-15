@@ -39,14 +39,3 @@
 </mat-card>
 
 <app-progress [isVisible]="isProcessing()" [progress]="progress()"></app-progress>
-<div style="width: 300px; height: 300px">
-   <stl-model-viewer
-      #stlviewer
-      class="box"
-      [stlModelFiles]="selectedFileContent()"
-      [hasControls]="true"
-      [centered]="true"
-      [renderer]="renderer"
-      [camera]="camera"
-   ></stl-model-viewer>
-</div>

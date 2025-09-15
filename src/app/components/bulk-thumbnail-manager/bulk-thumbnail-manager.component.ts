@@ -9,13 +9,13 @@ import { ThumbnailService } from '../../services/thumbnail.service'
 import { StlModelViewerComponent } from 'angular-stl-model-viewer'
 import { AmbientLight, DirectionalLight, Mesh, MeshPhongMaterial, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from 'three'
 import { FileInfo } from 'src/app/models'
-// @ts-ignore
-import { STLLoader } from 'three/examples/jsm/loaders/STLLoader'
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js'
 import { MatHint } from '@angular/material/form-field'
+import { MatSnackBar } from '@angular/material/snack-bar'
 
 @Component({
    selector: 'app-bulk-thumbnail-manager',
-   imports: [MatButton, MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle, MatCheckbox, MatIcon, ProgressComponent, StlModelViewerComponent, MatHint],
+   imports: [MatButton, MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle, MatCheckbox, MatIcon, ProgressComponent, MatHint],
    templateUrl: './bulk-thumbnail-manager.component.html',
    styleUrl: './bulk-thumbnail-manager.component.scss',
 })
@@ -25,6 +25,7 @@ export class BulkThumbnailManagerComponent {
    constructor(
       protected readonly fileSelectionService: FileSelectionService,
       private readonly thumbnailService: ThumbnailService,
+      private readonly snackBar: MatSnackBar,
    ) {}
 
    @ViewChild('stlviewer', { static: false }) stlViewerComponent!: StlModelViewerComponent
@@ -38,28 +39,43 @@ export class BulkThumbnailManagerComponent {
    readonly progress = signal(0)
    readonly error = signal('')
    readonly canUpdateThumbnails = computed(() => !this.isProcessing() && this.fileSelectionService.matchingFiles().length > 0)
-   readonly selectedFileContent = signal<string[]>([])
    readonly rotate = signal(true)
 
    async onGenerateThumbnails() {
       this.isProcessing.set(true)
+      let generatedCount = 0
+      let skippedCount = 0
       for (const fileInfo of this.fileSelectionService.matchingFiles()) {
          console.log('Processing', fileInfo.name)
-         const snapshot = await this.generateSnapshot(fileInfo)
+         const hasThumbnail = await this.thumbnailService.hasThumbnail(fileInfo)
+         if (!this.overwriteExistingThumbnails() && hasThumbnail) {
+            ++skippedCount
+         } else {
+            await this.generateSnapshot(fileInfo)
+            ++generatedCount
+         }
+         this.progress.set(((skippedCount + generatedCount) / this.fileSelectionService.matchingFiles().length) * 100)
       }
 
       this.isProcessing.set(false)
+      if (this.overwriteExistingThumbnails()) {
+         this.showToast(`Generated ${generatedCount} thumbnails`)
+      } else {
+         this.showToast(`Generated ${generatedCount} thumbnails, skipped ${skippedCount} existing thumbnails`)
+      }
+   }
+
+   showToast(msg: string) {
+      this.snackBar.open(msg, 'Close', {
+         duration: 3000,
+         horizontalPosition: 'center',
+         verticalPosition: 'top',
+      })
    }
 
    // TODO clean this up
-   // TODO add progress
    // TODO set camera pos etc on thumbnail manager component
    async generateSnapshot(fileInfo: FileInfo): Promise<void> {
-      const hasThumbnail = await this.thumbnailService.hasThumbnail(fileInfo)
-      if (!this.overwriteExistingThumbnails() && hasThumbnail) {
-         return
-      }
-
       const handle = await fileInfo.dirHandle.getFileHandle(fileInfo.name)
       const file = await handle.getFile()
       const buffer = await file.arrayBuffer()
