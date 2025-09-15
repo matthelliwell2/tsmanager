@@ -6,9 +6,10 @@ import { ThumbnailService } from '../../services/thumbnail.service'
 import { MatButton } from '@angular/material/button'
 import { MatCardModule, MatCardContent, MatCardHeader, MatCardSubtitle } from '@angular/material/card'
 import { MatIconModule } from '@angular/material/icon'
-import { PerspectiveCamera, WebGLRenderer } from 'three'
+import { Box3, Object3D, PerspectiveCamera, Vector3, WebGLRenderer } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { FileSelectionService } from '../../services/file-selection.service'
+import { THREE } from '@angular/cdk/keycodes'
 
 @Component({
    selector: 'app-thumbnail-manager',
@@ -41,6 +42,18 @@ export class ThumbnailManagerComponent {
    readonly thumbnailContent = signal<string | undefined>(undefined)
    readonly error = signal<string | undefined>(undefined)
 
+   rotate(axis: string, degrees: number) {
+      const radians = degrees * (Math.PI / 180)
+      this.stlViewerComponent.meshGroup.rotation[axis] += radians
+      this.renderer.render(this.stlViewerComponent.scene, this.camera)
+   }
+
+   // xx() {
+   //    const boundingBox = new Box3().setFromObject(this.stlViewerComponent.meshGroup)
+   //    const size = boundingBox.getSize(new Vector3())
+   //    const center = boundingBox.getCenter(new Vector3())
+   // }
+
    async onFileSelected(fileInfo: FileInfo): Promise<void> {
       this.isProcessing.set(true)
       this.fileSelectionService.selectedFile.set(fileInfo)
@@ -56,8 +69,6 @@ export class ThumbnailManagerComponent {
 
       const thumbnail = await this.thumbnailService.loadThumbnail(fileInfo)
       this.thumbnailContent.set(thumbnail)
-
-      // TODO call URL.revokeObjectURL(this.imageUrl);
    }
 
    private setupControls() {
@@ -74,7 +85,7 @@ export class ThumbnailManagerComponent {
    async copySTL(): Promise<void> {
       const renderer = this.stlViewerComponent.renderer
       if (renderer && this.fileSelectionService.selectedFile() !== undefined) {
-         const dataURL = renderer.domElement.toDataURL('image/jpg')
+         const dataURL = renderer.domElement.toDataURL('image/jpeg')
          await this.thumbnailService.saveThumbnail(this.fileSelectionService.selectedFile()!, dataURL)
       }
    }

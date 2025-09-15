@@ -29,6 +29,17 @@
                <div class="box">No thumbnail available</div>
             }
          </div>
+         <div class="controls">
+            @for (axis of ['x', 'y', 'z']; track axis) {
+               <div class="axis-group">
+                  <label>{{ axis.toUpperCase() }} Axis</label>
+                  <button (click)="rotate(axis, 45)">+45°</button>
+                  <button (click)="rotate(axis, -45)">−45°</button>
+                  <button (click)="rotate(axis, 5)">+5°</button>
+                  <button (click)="rotate(axis, -5)">−5°</button>
+               </div>
+            }
+         </div>
       } @else {
          <div class="no-files-message">
             <mat-icon>info</mat-icon>

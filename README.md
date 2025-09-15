@@ -7,6 +7,8 @@ An Angular application for managing tags and thumbnails across multiple files in
 
 The updated tags and thumbnails are all available to view and search in the TagSpace app.
 
+The latest version is deployed at https://tsmanager-2y7d9m1we-matt-helliwells-projects.vercel.app/
+
 ## Usage
 
 The website does not upload any of your files to a server - all the actions are done locally on your machine. Because the website access your local files, it will not work in Firefox or Safari. You will need to use Chrome. 
@@ -34,3 +36,9 @@ Once you are happy with the changes, click 'Apply Changes'. A progress bar will 
 ### Edit Thumbnails
 
 Click on the 'Thumbnails' tab. As before, select a directory, file pattern and choose scan files. When you click on one of the matching files, you'll be shown a view of the model and the current TagSpaces thumbnail for that file. Use the mouse to zoom in and out and rotate the model view. Once you are happy with the view, click 'Copy' to save it as a thumbnail.
+
+### Bulk Update Thumbnails
+
+This creates a thumbnail for all the matched files. This only works with STL files so make sure there are only STL files in the list. The options are:
+1. Overwrite existing thumbnails. If clicked, it will overwrite any existing thumbnail for that file. Otherwise it will skip that files.
+2. Rotate. This swaps the Y and Z axis and gives the correct orientation for some models.
